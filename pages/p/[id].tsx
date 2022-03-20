@@ -1,37 +1,58 @@
-import React from "react"
-import { GetServerSideProps } from "next"
-import ReactMarkdown from "react-markdown"
-import Layout from "../../components/Layout"
-import { PostProps } from "../../components/Post"
+import React from "react";
+import { GetServerSideProps } from "next";
+import ReactMarkdown from "react-markdown";
+import Router from "next/router";
+import { useSession } from "next-auth/react";
+
+import Layout from "../../components/Layout";
+import { PostProps } from "../../components/Post";
+import prisma from "../../lib/prisma";
 
 export const getServerSideProps: GetServerSideProps = async ({ params }) => {
-  const post = {
-    id: 1,
-    title: "Prisma is the perfect ORM for Next.js",
-    content: "[Prisma](https://github.com/prisma/prisma) and Next.js go _great_ together!",
-    published: false,
-    author: {
-      name: "Nikolas Burk",
-      email: "burk@prisma.io",
+  const post = await prisma.pet.findUnique({
+    where: {
+      id: Number(params?.id) || -1,
     },
-  }
+    include: {
+      user: {
+        select: { name: true, email: true },
+      },
+    },
+  });
   return {
     props: post,
-  }
+  };
+};
+
+async function deletePost(id: number): Promise<void> {
+  await fetch(`/api/post/${id}`, {
+    method: "DELETE",
+  });
+  Router.push("/");
 }
 
-const Post: React.FC<PostProps> = (props) => {
-  let title = props.title
-  if (!props.published) {
-    title = `${title} (Draft)`
+const Pet: React.FC<PostProps> = (props) => {
+  const { data: session, status } = useSession();
+  if (status === "loading") {
+    return <div>Authenticating ...</div>;
+  }
+  const userHasValidSession = Boolean(session);
+  const postBelongsToUser = session?.user?.email === props.user?.email;
+
+  let title = props.name;
+  if (!props.birthDate) {
+    title = `${title} (Draft)`;
   }
 
   return (
     <Layout>
       <div>
         <h2>{title}</h2>
-        <p>By {props?.author?.name || "Unknown author"}</p>
-        <ReactMarkdown children={props.content} />
+        <p>De {props?.user?.name || "Unknown author"}</p>
+        <ReactMarkdown children={props.breed} />
+        {userHasValidSession && postBelongsToUser && (
+          <button onClick={() => deletePost(props.id)}>Eliminar</button>
+        )}
       </div>
       <style jsx>{`
         .page {
@@ -55,7 +76,7 @@ const Post: React.FC<PostProps> = (props) => {
         }
       `}</style>
     </Layout>
-  )
-}
+  );
+};
 
-export default Post
+export default Pet;
