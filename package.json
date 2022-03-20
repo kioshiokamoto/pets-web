@@ -8,7 +8,7 @@
     "start": "next start",
     "prisma": "npx prisma",
     "prisma:studio": "yarn prisma studio",
-    "prisma:initialize": "yarn prisma migrate dev --name initialize",
+    "prisma:migrate": "yarn prisma migrate dev --name ",
     "prisma:push": "yarn prisma db push",
     "prisma:generate": "yarn prisma generate"
   },
