@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import { GetStaticProps } from "next";
+
 import Layout from "../components/Layout";
-import Post, { PostProps } from "../components/Post";
+import Pet, { PetProps } from "../components/Pet";
 import prisma from "../lib/prisma";
+import Search from "../components/Search";
 
 export const getStaticProps: GetStaticProps = async () => {
   const pets = await prisma.pet.findMany({
@@ -17,20 +19,30 @@ export const getStaticProps: GetStaticProps = async () => {
 };
 
 type Props = {
-  pets: PostProps[];
+  pets: PetProps[];
 };
 
 const Blog: React.FC<Props> = (props) => {
   const { pets } = props;
+  const [searchText, setSearchText] = useState("");
+
+  const petsFiltered = pets?.filter((pet) =>
+    pet.name.toLowerCase().includes(searchText.toLowerCase())
+  );
 
   return (
     <Layout>
       <div className="page">
         <h1>Lista de mascotas</h1>
         <main>
-          {pets.map((pet) => (
+          <Search
+            placeholder="Buscar"
+            value={searchText}
+            onChange={(e) => setSearchText(e.target.value.trim())}
+          />
+          {petsFiltered.map((pet) => (
             <div key={pet.id} className="post">
-              <Post post={pet} />
+              <Pet pet={pet} />
             </div>
           ))}
         </main>

@@ -5,7 +5,7 @@ import Router from "next/router";
 import { useSession } from "next-auth/react";
 
 import Layout from "../../components/Layout";
-import { PostProps } from "../../components/Post";
+import { PetProps } from "../../components/Pet";
 import prisma from "../../lib/prisma";
 
 export const getServerSideProps: GetServerSideProps = async ({ params }) => {
@@ -31,7 +31,7 @@ async function deletePost(id: number): Promise<void> {
   Router.push("/");
 }
 
-const Pet: React.FC<PostProps> = (props) => {
+const Pet: React.FC<PetProps> = (props) => {
   const { data: session, status } = useSession();
   if (status === "loading") {
     return <div>Authenticating ...</div>;

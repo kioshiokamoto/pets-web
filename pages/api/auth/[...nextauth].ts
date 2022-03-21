@@ -50,6 +50,13 @@ const options: NextAuthOptions = {
             );
           }
         } else {
+          const security = new RegExp(
+            "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})"
+          );
+
+          if (!credentials.password.match(security)) {
+            throw new Error("Por favor ingrese una clave segura");
+          }
           // Verify password values
           const hashedPassword = await bcrypt.hash(credentials.password, 6);
           const registered = await prisma.user.create({

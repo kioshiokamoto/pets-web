@@ -1,8 +1,9 @@
 import React from "react";
 import { GetServerSideProps } from "next";
 import { useSession, getSession } from "next-auth/react";
+
 import Layout from "../components/Layout";
-import Post, { PostProps } from "../components/Post";
+import Pet, { PetProps } from "../components/Pet";
 import prisma from "../lib/prisma";
 
 export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
@@ -28,7 +29,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
 };
 
 type Props = {
-  pets: PostProps[];
+  pets: PetProps[];
 };
 
 const MyPets: React.FC<Props> = (props) => {
@@ -48,24 +49,24 @@ const MyPets: React.FC<Props> = (props) => {
       <div className="page">
         <h1>Mis mascotas</h1>
         <main>
-          {props.pets.map((post) => (
-            <div key={post.id} className="post">
-              <Post post={post} />
+          {props.pets.map((pet) => (
+            <div key={pet.id} className="pet">
+              <Pet pet={pet} />
             </div>
           ))}
         </main>
       </div>
       <style jsx>{`
-        .post {
+        .pet {
           background: var(--geist-background);
           transition: box-shadow 0.1s ease-in;
         }
 
-        .post:hover {
+        .pet:hover {
           box-shadow: 1px 1px 3px #aaa;
         }
 
-        .post + .post {
+        .pet + .pet {
           margin-top: 2rem;
         }
       `}</style>
