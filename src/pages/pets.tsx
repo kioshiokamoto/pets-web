@@ -2,9 +2,10 @@ import React from "react";
 import { GetServerSideProps } from "next";
 import { useSession, getSession } from "next-auth/react";
 
-import Layout from "../components/Layout";
-import Pet, { PetProps } from "../components/Pet";
 import prisma from "../lib/prisma";
+import Layout from "../components/Layout/Layout";
+import { PetProps } from "../components/Pet/Pet.types";
+import Pet from "../components/Pet/Pet";
 
 export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
   const session = await getSession({ req });
@@ -51,7 +52,7 @@ const MyPets: React.FC<Props> = (props) => {
         <main>
           {props.pets.map((pet) => (
             <div key={pet.id} className="pet">
-              <Pet pet={pet} />
+              <Pet {...pet} />
             </div>
           ))}
         </main>

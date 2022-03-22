@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import { GetStaticProps } from "next";
 
-import Layout from "../components/Layout";
-import Pet, { PetProps } from "../components/Pet";
 import prisma from "../lib/prisma";
-import Search from "../components/Search";
+import Layout from "../components/Layout/Layout";
+import { PetProps } from "../components/Pet/Pet.types";
+import Pet from "../components/Pet/Pet";
+import Search from "../components/Search/Search";
 
 export const getStaticProps: GetStaticProps = async () => {
   const pets = await prisma.pet.findMany({
@@ -42,7 +43,7 @@ const Blog: React.FC<Props> = (props) => {
           />
           {petsFiltered.map((pet) => (
             <div key={pet.id} className="post">
-              <Pet pet={pet} />
+              <Pet {...pet} />
             </div>
           ))}
         </main>

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import Layout from "../components/Layout";
 import Router from "next/router";
+import Layout from "../components/Layout/Layout";
 
 const Pets: React.FC = () => {
   const [name, setName] = useState("");

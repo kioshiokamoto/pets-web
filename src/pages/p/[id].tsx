@@ -4,9 +4,9 @@ import ReactMarkdown from "react-markdown";
 import Router from "next/router";
 import { useSession } from "next-auth/react";
 
-import Layout from "../../components/Layout";
-import { PetProps } from "../../components/Pet";
 import prisma from "../../lib/prisma";
+import Layout from "../../components/Layout/Layout";
+import { PetProps } from "../../components/Pet/Pet.types";
 
 export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   const post = await prisma.pet.findUnique({
