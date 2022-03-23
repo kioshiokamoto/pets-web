@@ -2,22 +2,82 @@ generator client {
   provider = "prisma-client-js"
 }
 
+// datasource db {
+//   provider = "sqlite"
+//   url      = "file:./dev.db"
+// }
 datasource db {
-  provider = "sqlite"
-  url      = "file:./dev.db"
+  provider = "mysql"
+  url      = env("DATABASE_URL")
 }
 
 model Pet {
-  id        Int      @id @default(autoincrement())
-  name      String
-  breed     String?
-  genre     Int?
-  birthDate DateTime
-  image     String?
-  user      User?    @relation(fields: [userId], references: [id])
-  userId    Int?
+  id               Int                @id @default(autoincrement())
+  name             String
+  breed            BredByPet[]
+  genre            Int?
+  birthDate        DateTime
+  image            String?
+  user             User?              @relation(fields: [userId], references: [id])
+  userId           Int?
+  createdAt        DateTime           @default(now()) @map(name: "created_at")
+  updatedAt        DateTime           @updatedAt @map(name: "updated_at")
+  AppointmentByPet AppointmentByPet[]
+}
+
+model BredByPet {
+  pet       Pet      @relation(fields: [petId], references: [id])
+  petId     Int
+  breed     Breed    @relation(fields: [breedId], references: [id])
+  breedId   Int
   createdAt DateTime @default(now()) @map(name: "created_at")
   updatedAt DateTime @updatedAt @map(name: "updated_at")
+
+  @@id([petId, breedId])
+}
+
+model Breed {
+  id               Int                @id @default(autoincrement())
+  name             String             @unique
+  BredByPet        BredByPet[]
+  AppointmentByPet AppointmentByPet[]
+}
+
+model AppointmentByPet {
+  pet           Pet         @relation(fields: [petId], references: [id])
+  petId         Int
+  appointment   Appointment @relation(fields: [appointmentId], references: [id])
+  appointmentId Int
+  createdAt     DateTime    @default(now()) @map(name: "created_at")
+  updatedAt     DateTime    @updatedAt @map(name: "updated_at")
+
+  Breed   Breed? @relation(fields: [breedId], references: [id])
+  breedId Int?
+  @@id([petId, appointmentId])
+}
+
+model Appointment {
+  id               Int                @id @default(autoincrement())
+  description      String
+  symptoms         String
+  image            String?
+  bloodTest        String?
+  bill             Float?
+  medicine         String?
+  status           AppointmentStatus  @default(BOOKED)
+  paymentStatus    PaymentStatus      @default(PENDING)
+  AppointmentByPet AppointmentByPet[]
+}
+
+enum AppointmentStatus {
+  BOOKED
+  ATTENDED
+  CANCELLED
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
 }
 
 model Account {
@@ -52,6 +112,15 @@ model Session {
   @@map("sessions")
 }
 
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verificationtokens")
+}
+
 model User {
   id            Int       @id @default(autoincrement())
   name          String?
@@ -63,17 +132,15 @@ model User {
   createdAt     DateTime  @default(now()) @map(name: "created_at")
   updatedAt     DateTime  @updatedAt @map(name: "updated_at")
   pets          Pet[]
+  accounts      Account[]
+  sessions      Session[]
+  role          UserRole  @default(CLIENT)
 
-  accounts Account[]
-  sessions Session[]
   @@map(name: "users")
 }
 
-model VerificationToken {
-  identifier String
-  token      String   @unique
-  expires    DateTime
-
-  @@unique([identifier, token])
-  @@map("verificationtokens")
+enum UserRole {
+  ADMIN
+  CLIENT
+  VETERINARY
 }
