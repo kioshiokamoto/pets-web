@@ -5,12 +5,14 @@ import { signOut, useSession } from "next-auth/react";
 
 import Styles from "./Header.styles";
 import { HeaderProps as Props } from "./Header.types";
+import { useGetUser } from "../../hooks/user.hooks";
 
 const Header: React.FC<Props> = (props) => {
   const router = useRouter();
   const isActive: (pathname: string) => boolean = (pathname) =>
     router.pathname === pathname;
   const { data: session, status } = useSession();
+  const { data: user, isLoading } = useGetUser();
 
   let left = (
     <div className="left">
@@ -24,7 +26,7 @@ const Header: React.FC<Props> = (props) => {
 
   let right = null;
 
-  if (status === "loading") {
+  if (status === "loading" || isLoading) {
     left = (
       <div className="left">
         <Link href="/">
@@ -46,7 +48,7 @@ const Header: React.FC<Props> = (props) => {
     );
   }
 
-  if (!session) {
+  if (!session || (!isLoading && !user)) {
     right = (
       <div className="right">
         <Link href="/api/auth/signin">
@@ -56,7 +58,7 @@ const Header: React.FC<Props> = (props) => {
     );
   }
 
-  if (session) {
+  if (user) {
     left = (
       <div className="left">
         <Link href="/">
@@ -67,18 +69,39 @@ const Header: React.FC<Props> = (props) => {
         <Link href="/pets">
           <a data-active={isActive("/pets")}>Mis mascotas</a>
         </Link>
+        {user.role === "CLIENT" ? (
+          <Link href="/my-appointments">
+            <a data-active={isActive("/my-appointments")}>Mis citas</a>
+          </Link>
+        ) : null}
       </div>
     );
     right = (
       <div className="right">
         <p>
-          {session.user.name} ({session.user.email})
+          {user.name} ({user.email}) - {user.role}
         </p>
-        <Link href="/create">
-          <button>
-            <a>Agregar mascota</a>
-          </button>
-        </Link>
+        {user.role === "CLIENT" ? (
+          <Link href="/create">
+            <button>
+              <a>Agregar mascota</a>
+            </button>
+          </Link>
+        ) : null}
+        {user.role === "VETERINARY" ? (
+          <Link href="/appointments">
+            <button>
+              <a>Citas pendientes</a>
+            </button>
+          </Link>
+        ) : null}
+        {user.role === "ADMIN" ? (
+          <Link href="/admin">
+            <button>
+              <a>Admin panel</a>
+            </button>
+          </Link>
+        ) : null}
         <button onClick={() => signOut()}>
           <a>Salir</a>
         </button>

@@ -33,15 +33,13 @@ const HeaderStyled = styled.nav<Props>`
 
     .right {
       margin-left: auto;
+      display: flex;
 
       p {
-        display: inline-block;
-        font-size: 13px;
-        padding-right: 1rem;
+        font-size: 0.8rem;
       }
 
       a {
-        border: 1px solid var(--geist-foreground);
         padding: 0.5rem 1rem;
         border-radius: 3px;
       }
@@ -49,6 +47,8 @@ const HeaderStyled = styled.nav<Props>`
       button {
         border: none;
         cursor: pointer;
+        font-size: 1rem;
+        margin-left: 1rem;
       }
     }
   }

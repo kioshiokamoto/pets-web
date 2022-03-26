@@ -5,6 +5,7 @@ import { Hydrate } from "react-query/hydration";
 
 import { ProvidersProps as Props } from "./Providers.types";
 import ThemeProvider from "../contexts/theme/theme.context";
+import UserProvider from "../contexts/user/user.context";
 
 const Providers: React.FC<Props> = (props) => {
   const { children, dehydratedState } = props;
@@ -24,7 +25,11 @@ const Providers: React.FC<Props> = (props) => {
   return (
     <ThemeProvider>
       <QueryClientProvider client={queryClientRef.current}>
-        <Hydrate state={dehydratedState}>{children}</Hydrate>
+        <Hydrate state={dehydratedState}>
+          <UserProvider>
+            <>{children}</>
+          </UserProvider>
+        </Hydrate>
       </QueryClientProvider>
     </ThemeProvider>
   );

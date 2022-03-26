@@ -43,7 +43,7 @@ const Pets: React.FC = () => {
   };
 
   return (
-    <Layout>
+    <Layout role="CLIENT">
       <div className="container">
         <form onSubmit={submitData}>
           <h1>Agregar mascota</h1>
