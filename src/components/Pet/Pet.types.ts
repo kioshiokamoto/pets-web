@@ -8,7 +8,9 @@ export interface PetProps {
     name: string;
     email: string;
   } | null;
-  breed: string;
+  breed: {
+    name: string;
+  };
   image: string;
   birthDate: any;
 }

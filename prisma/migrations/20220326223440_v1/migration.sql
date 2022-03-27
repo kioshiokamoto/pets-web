@@ -2,13 +2,38 @@
 CREATE TABLE `Pet` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(191) NOT NULL,
-    `breed` VARCHAR(191) NULL,
     `genre` INTEGER NULL,
     `birthDate` DATETIME(3) NOT NULL,
     `image` VARCHAR(191) NULL,
+    `breedId` INTEGER NULL,
     `userId` INTEGER NULL,
     `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updated_at` DATETIME(3) NOT NULL,
+
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `Breed` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `name` VARCHAR(191) NOT NULL,
+
+    UNIQUE INDEX `Breed_name_key`(`name`),
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `Appointment` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `description` VARCHAR(191) NOT NULL,
+    `symptoms` VARCHAR(191) NOT NULL,
+    `image` VARCHAR(191) NULL,
+    `bloodTest` VARCHAR(191) NULL,
+    `bill` DOUBLE NULL,
+    `medicine` VARCHAR(191) NULL,
+    `status` ENUM('BOOKED', 'ATTENDED', 'CANCELLED') NOT NULL DEFAULT 'BOOKED',
+    `paymentStatus` ENUM('PENDING', 'PAID') NOT NULL DEFAULT 'PENDING',
+    `petId` INTEGER NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -46,6 +71,16 @@ CREATE TABLE `sessions` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
+CREATE TABLE `verificationtokens` (
+    `identifier` VARCHAR(191) NOT NULL,
+    `token` VARCHAR(191) NOT NULL,
+    `expires` DATETIME(3) NOT NULL,
+
+    UNIQUE INDEX `verificationtokens_token_key`(`token`),
+    UNIQUE INDEX `verificationtokens_identifier_token_key`(`identifier`, `token`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
 CREATE TABLE `users` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(191) NULL,
@@ -56,23 +91,20 @@ CREATE TABLE `users` (
     `password` VARCHAR(191) NULL,
     `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updated_at` DATETIME(3) NOT NULL,
+    `role` ENUM('ADMIN', 'CLIENT', 'VETERINARY') NOT NULL DEFAULT 'CLIENT',
 
     UNIQUE INDEX `users_email_key`(`email`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
--- CreateTable
-CREATE TABLE `verificationtokens` (
-    `identifier` VARCHAR(191) NOT NULL,
-    `token` VARCHAR(191) NOT NULL,
-    `expires` DATETIME(3) NOT NULL,
-
-    UNIQUE INDEX `verificationtokens_token_key`(`token`),
-    UNIQUE INDEX `verificationtokens_identifier_token_key`(`identifier`, `token`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+-- AddForeignKey
+ALTER TABLE `Pet` ADD CONSTRAINT `Pet_breedId_fkey` FOREIGN KEY (`breedId`) REFERENCES `Breed`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `Pet` ADD CONSTRAINT `Pet_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `users`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `Appointment` ADD CONSTRAINT `Appointment_petId_fkey` FOREIGN KEY (`petId`) REFERENCES `Pet`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `accounts` ADD CONSTRAINT `accounts_user_id_fkey` FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;

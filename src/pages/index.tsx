@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { GetStaticProps } from "next";
+import { SearchInput } from "evergreen-ui";
 
 import prisma from "../lib/prisma";
 import Layout from "../components/Layout/Layout";
 import { PetProps } from "../components/Pet/Pet.types";
 import Pet from "../components/Pet/Pet";
-import Search from "../components/Search/Search";
 
 export const getStaticProps: GetStaticProps = async () => {
   const pets = await prisma.pet.findMany({
@@ -13,9 +13,11 @@ export const getStaticProps: GetStaticProps = async () => {
       user: {
         select: { name: true },
       },
+      breed: {
+        select: { name: true },
+      },
     },
   });
-
   return { props: { pets } };
 };
 
@@ -36,10 +38,12 @@ const Blog: React.FC<Props> = (props) => {
       <div className="page">
         <h1>Lista de mascotas</h1>
         <main>
-          <Search
-            placeholder="Buscar"
+          <SearchInput
+            onChange={(e) => setSearchText(e.target.value)}
             value={searchText}
-            onChange={(e) => setSearchText(e.target.value.trim())}
+            width="100%"
+            placeholder="Ingresa el nombre de la mascota"
+            marginTop={16}
           />
           {petsFiltered.map((pet) => (
             <div key={pet.id} className="post">

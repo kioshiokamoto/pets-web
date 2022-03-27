@@ -22,6 +22,9 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
       user: {
         select: { name: true },
       },
+      breed: {
+        select: { name: true },
+      },
     },
   });
   return {
