@@ -1,6 +1,9 @@
 import styled from "styled-components";
 
 import { PetStyledProps as Props } from "./Pet.types";
+import { BREAKPOINTS } from "../../utils/generic.utils";
+
+const { tablet } = BREAKPOINTS;
 
 const PetStyled = styled.div<Props>`
   .Pet {
@@ -9,6 +12,9 @@ const PetStyled = styled.div<Props>`
       padding: 2rem;
       display: flex;
       align-items: center;
+      @media (max-width: ${tablet}px) {
+        flex-direction: column;
+      }
     }
     &__info {
       display: flex;
@@ -21,6 +27,10 @@ const PetStyled = styled.div<Props>`
       overflow: hidden;
       position: relative;
       margin-right: 2rem;
+      @media (max-width: ${tablet}px) {
+        margin-right: 0;
+        margin-bottom: 1rem;
+      }
     }
   }
 `;

@@ -26,30 +26,30 @@ const Appointment: React.FC<Props> = (props) => {
         cursor="pointer"
       >
         <Pane display="flex" alignItems="center" justifyContent="space-between">
-          <Text size={700}>
-            <Strong size={700}>ID:</Strong> #{id}
+          <Text size={600}>
+            <Strong size={600}>ID:</Strong> #{id}
           </Text>
-          <Text size={700}>
-            <Strong size={700}>Paciente:</Strong> {petName}
+          <Text size={600}>
+            <Strong size={600}>Paciente:</Strong> {petName}
           </Text>
-          <Text size={700}>
-            <Strong size={700}>Estatus:</Strong> {transformStatus(status)}
+          <Text size={600}>
+            <Strong size={600}>Estatus:</Strong> {transformStatus(status)}
           </Text>
         </Pane>
         <Pane>
-          <Strong size={700}>Dueño:</Strong>
-          <Text size={700} marginLeft={16}>
+          <Strong size={600}>Dueño:</Strong>
+          <Text size={600} marginLeft={16}>
             {user?.name ?? user?.email}
           </Text>
         </Pane>
         <Pane>
-          <Strong size={700}>Descripción:</Strong>
-          <Text size={700} marginLeft={16}>
+          <Strong size={600}>Descripción:</Strong>
+          <Text size={600} marginLeft={16}>
             {description}
           </Text>
         </Pane>
         <Pane display="flex" alignItems="center" flexWrap="wrap">
-          <Strong size={700}>Sintomas:</Strong>
+          <Strong size={600}>Sintomas:</Strong>
           {symptoms.split(",").map((symptom, idx) => {
             if (idx === 0) return null;
             return (

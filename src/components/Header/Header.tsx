@@ -2,6 +2,7 @@ import React from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { signOut, useSession } from "next-auth/react";
+import { slide as Menu } from "react-burger-menu";
 
 import Styles from "./Header.styles";
 import { HeaderProps as Props } from "./Header.types";
@@ -66,13 +67,15 @@ const Header: React.FC<Props> = (props) => {
             Inicio
           </a>
         </Link>
-        <Link href="/pets">
-          <a data-active={isActive("/pets")}>Mis mascotas</a>
-        </Link>
         {user.role === "CLIENT" ? (
-          <Link href="/my-appointments">
-            <a data-active={isActive("/my-appointments")}>Mis citas</a>
-          </Link>
+          <>
+            <Link href="/pets">
+              <a data-active={isActive("/pets")}>Mis mascotas</a>
+            </Link>
+            <Link href="/my-appointments">
+              <a data-active={isActive("/my-appointments")}>Mis citas</a>
+            </Link>
+          </>
         ) : null}
       </div>
     );
@@ -109,10 +112,58 @@ const Header: React.FC<Props> = (props) => {
     );
   }
 
+  const mobile = (
+    <div className="mobile">
+      <Menu right width={"100%"} className={"hamburger"}>
+        <Link href="/">
+          <a className="bold" data-active={isActive("/")}>
+            Inicio
+          </a>
+        </Link>
+        {user?.role === "CLIENT" ? (
+          <>
+            <Link href="/pets">
+              <a data-active={isActive("/pets")}>Mis mascotas</a>
+            </Link>
+            <Link href="/my-appointments">
+              <a data-active={isActive("/my-appointments")}>Mis citas</a>
+            </Link>
+            <Link href="/create">
+              <a data-active={isActive("/create")}>Agregar mascota</a>
+            </Link>
+          </>
+        ) : null}
+        {user?.role === "VETERINARY" ? (
+          <Link href="/appointments">
+            <a>Citas pendientes</a>
+          </Link>
+        ) : null}
+        {user ? (
+          <a
+            style={{ marginTop: "auto", marginBottom: "2rem", display: "flex" }}
+            onClick={() => signOut()}
+          >
+            Salir
+          </a>
+        ) : (
+          <Link href="/api/auth/signin">
+            <a
+              style={{ marginTop: "auto", marginBottom: "2rem" }}
+              data-active={isActive("/signup")}
+            >
+              Ingresar
+            </a>
+          </Link>
+        )}
+      </Menu>
+    </div>
+  );
+
   return (
     <Styles className="Header">
       {left}
       {right}
+      {mobile}
     </Styles>
   );
 };

@@ -35,7 +35,7 @@ const AppointmentForm: React.FC<Props> = (props) => {
           }}
         >
           <Heading
-            size={700}
+            size={600}
             marginBottom={24}
             paddingX={48}
             width="max-content"

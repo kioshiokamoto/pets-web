@@ -1,7 +1,10 @@
 import { GetServerSideProps } from "next";
-import { getSession } from "next-auth/react";
+import { getSession, useSession } from "next-auth/react";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
 
 import AppointmentDetail from "../../components/AppointmentDetail/AppointmentDetail";
+import Layout from "../../components/Layout/Layout";
 import { Appointment } from "../../interfaces/appointment.types";
 import prisma from "../../lib/prisma";
 
@@ -26,7 +29,7 @@ export const getServerSideProps: GetServerSideProps = async ({
         select: {
           name: true,
           user: {
-            select: { name: true, email: true },
+            select: { name: true, email: true, role: true },
           },
         },
       },
@@ -38,10 +41,25 @@ export const getServerSideProps: GetServerSideProps = async ({
 };
 
 const AppointmentPage: React.FC<Appointment> = (props) => {
+  const { data: session } = useSession();
+  const router = useRouter();
+  const userHasValidSession = Boolean(session);
+  const petBelongsToUser = session?.user?.email === props.pet.user?.email;
+
+  useEffect(() => {
+    if (!petBelongsToUser && props.pet.user?.role !== "VETERINARY") {
+      router.push("/");
+    }
+  }, []);
+
   return (
-    <>
-      <AppointmentDetail {...props} />
-    </>
+    <Layout>
+      <AppointmentDetail
+        {...props}
+        userHasValidSession={userHasValidSession}
+        petBelongsToUser={petBelongsToUser}
+      />
+    </Layout>
   );
 };
 

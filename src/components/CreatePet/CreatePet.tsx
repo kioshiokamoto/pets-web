@@ -64,7 +64,7 @@ const CreatePet: React.FC<Props> = (props) => {
             })
           }
         >
-          <Heading size={700} marginBottom={24}>
+          <Heading size={600} marginBottom={24}>
             Agregar mascota
           </Heading>
           <TextInputField

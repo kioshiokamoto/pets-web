@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Image from "next/image";
-import { Pane } from "evergreen-ui";
+import { Pane, Text } from "evergreen-ui";
 import { Button } from "evergreen-ui";
 
 import Styles from "./PetInformation.styles";
@@ -21,20 +21,38 @@ const PetInformation: React.FC<Props> = (props) => {
 
   return (
     <Styles className="PetInformation">
-      <Pane display="flex">
-        <Pane display="flex" flexDirection="column" minWidth={400}>
-          <h2>{name}</h2>
-          <div className="PetInformation__image">
-            {image ? (
-              <Image src={image} layout="fill" />
-            ) : (
-              <Image src={dogPlaceholder} layout="fill" />
-            )}
-          </div>
+      <div className="PetInformation__container">
+        <div className="PetInformation__container-left">
+          <Pane
+            display="flex"
+            flexDirection="column"
+            alignItems="center"
+            background="tint2"
+            marginBottom={32}
+            padding={16}
+            borderRadius={4}
+            >
+            <Text size="600" color="default">
+              {name}
+            </Text>
+            <div className="PetInformation__image">
+              {image ? (
+                <Image src={image} layout="fill" />
+              ) : (
+                <Image src={dogPlaceholder} layout="fill" />
+              )}
+            </div>
 
-          <p>De {userName ?? email}</p>
-          <p>{breedName}</p>
-          <p>{new Date(birthDate).toISOString().split("T")[0]}</p>
+            <Text size="600" color="default">
+              De {userName ?? email}
+            </Text>
+            <Text size="600" color="default">
+              {breedName}
+            </Text>
+            <Text size="600" color="default">
+              {new Date(birthDate).toISOString().split("T")[0]}
+            </Text>
+          </Pane>
           {userHasValidSession && petBelongsToUser && (
             <>
               <Button
@@ -48,6 +66,7 @@ const PetInformation: React.FC<Props> = (props) => {
                 intent="danger"
                 size="large"
                 onClick={() => deletePost(id)}
+                marginY={16}
               >
                 Eliminar
               </Button>
@@ -59,14 +78,28 @@ const PetInformation: React.FC<Props> = (props) => {
               createAppointment={createAppointment}
             />
           ) : null}
-        </Pane>
-        <Pane width="100%" marginLeft={24}>
+        </div>
+        <Pane width="100%" className="PetInformation__appointments">
           <div>Citas de {name}</div>
-          {appointments.map((appointment) => (
-            <Appointment {...appointment} />
-          ))}
+          {petBelongsToUser
+            ? appointments.map((appointment, idx) => (
+                <Appointment {...appointment} key={idx} />
+              ))
+            : null}
+          {!petBelongsToUser ? (
+            <Pane
+              background="tint2"
+              display="flex"
+              padding={32}
+              marginY={16}
+              alignItems="center"
+              justifyContent="center"
+            >
+              <Text>Debes ser dueño de {name} para ver sus citas</Text>
+            </Pane>
+          ) : null}
         </Pane>
-      </Pane>
+      </div>
     </Styles>
   );
 };

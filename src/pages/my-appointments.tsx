@@ -49,8 +49,8 @@ const MyAppointmentsPage: React.FC<Props> = (props) => {
         placeholder="Ingresa el nombre de la mascota"
       />
       <Pane display="flex" flexDirection="column">
-        {appointmentsFiltered.map((appointment) => (
-          <AppointmentItem {...appointment} />
+        {appointmentsFiltered.map((appointment, idx) => (
+          <AppointmentItem {...appointment} key={idx} />
         ))}
       </Pane>
     </Layout>

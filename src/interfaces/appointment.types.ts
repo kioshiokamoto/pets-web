@@ -15,7 +15,6 @@ export interface AppointmentConfig
   extends Pick<Appointment, "description" | "symptoms"> {
   petId: number;
 }
-
 const AppointmentStatus = {
   BOOKED: "BOOKED",
   ATTENDED: "ATTENDED",
@@ -24,3 +23,6 @@ const AppointmentStatus = {
 
 export type AppointmentStatus =
   typeof AppointmentStatus[keyof typeof AppointmentStatus];
+
+export interface AppointmentUpdateConfig
+  extends Omit<Appointment, "description" | "symptoms" | "pet"> {}
