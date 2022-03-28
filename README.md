@@ -2,7 +2,7 @@
 
 # Pets web (WIP)
 
-Web de mascotas
+Web de mascotas cuyo objetivo es el agendamiento de citas médicas para mascotas y poder llevar un historial medico de tu(s) mascota(s).
 
 ## Tech Stack
 
