@@ -12,7 +12,7 @@ const handler = nc<Request, NextApiResponse>({
 
 handler.post(async (req: any, res) => {
   const userData = await prisma.user.findFirst({
-    where: { email: req?.email },
+    where: { email: req.body?.email },
   });
   delete userData.password;
   delete userData.createdAt;

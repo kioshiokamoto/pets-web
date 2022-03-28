@@ -104,7 +104,7 @@ const options: NextAuthOptions = {
     },
   },
   theme: {
-    colorScheme: "dark",
-    brandColor: "#ccc",
+    colorScheme: "light",
+    brandColor: "#000",
   },
 };
