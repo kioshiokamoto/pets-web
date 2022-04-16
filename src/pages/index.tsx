@@ -11,7 +11,7 @@ export const getStaticProps: GetStaticProps = async () => {
   const pets = await prisma.pet.findMany({
     include: {
       user: {
-        select: { name: true },
+        select: { name: true, email: true },
       },
       breed: {
         select: { name: true },

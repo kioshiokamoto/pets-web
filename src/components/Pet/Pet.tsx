@@ -8,7 +8,7 @@ import { dogPlaceholder } from "../../utils/generic.utils";
 
 const Pet: React.FC<Props> = (props) => {
   const { birthDate, breed, id, image, name, user } = props ?? {};
-  const authorName = user?.name ? user.name : "Desconocido";
+  const authorName = user?.name ? user.name : user.email;
 
   return (
     <Styles className="Pet">
